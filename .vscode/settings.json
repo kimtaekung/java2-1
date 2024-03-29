@@ -1,0 +1,11 @@
+{
+    "java.project.sourcePaths": [
+        "src"
+        ,"src/chapter01"//(폴더로 만들어서 할 경우)
+        
+    ],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ]
+}
