@@ -4,7 +4,7 @@ public class ex5_01 {
         p.set(1 , 2);
         p.showPoint();
 
-        ColorPoint cp = new ColorPoint();
+        ColorPoint cp = new colorPoint();
         cp.set(3, 4);
         cp.setColor("red");
         cp.showColorPoint();
