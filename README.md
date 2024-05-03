@@ -1,5 +1,310 @@
 ## 202330109 김태경
 
+## 5월 3일 강의(중간 이후)
+## 컬렉션의 개념
+    요소라고 불리는 가벼 개수의 객체들의 저장소
+        객체들의 컨테이너라고도 불림
+        요소의 개수에 따라 크기 자동 조절
+        요소의 삽입, 삭제에 따른 요소의 위치 자동 이동
+    고정 크기의 배열을 다루는 어려움 해소
+    다양한 객체들의 삽입, 삭제 검색 등의 관리 용이
+
+## 컬렉션의 특징
+    1. 컬렉션은 제네릭 기법으로 구현
+        제네릭
+            특정 타입만 다루지 않고, 여러 종류의 타입으로 변신할 수 있도록 클래스나 메소드를 일반화시키는 기법
+            클래스나 인터페이스 이름에 <E>,<K>,<V> 등 타입매개변수 포함
+        제네릭 컬렉션 사례 : 벡터 Vextor<E>
+            <E>에서 E에 구체적인 타입을 주어 구체적인 타입만 다루는 벡터로 활용
+            정수만 다루는 컬렉션 벡터 Vextor<Integer>
+            문자열만 다루는 컬렉션 벡터 Vector<String>
+    
+    2. 컬렉션의 요소는 객체만 가능
+        int, char, oduble 등의 기본 타입으로 구체화 불가
+
+## 제네릭은 형판과 같은 개념
+    제네릭
+        클래스나 메소드를 형판에서 찍어내듯이 생산할 수 있도록 일반화된 평판을 만드는 기법
+    
+## Vector<E>
+    벡터 Vector<E>의 특성
+        <E>에 사용할 요소의 특정 타입으로 구체화
+        배열을 가변 크기로 다룰 수 있게 하는 커네이너
+            배열의 길이 제한 극복
+            요소의 개수가 넘치면 자동으로 길이 조절
+        요소 객체들을 삽입,삭제, 검색하는 컨테이너
+            삽입, 삭제에 따라 자동으로 요소의 위치 조정
+        Vector에 삽입 가능한 것
+            객체, null
+            기본 타입의 값은 Wrapper 객체로 만들어 저장
+        Vector에 객체 삽입
+            벡터의 맨 뒤, 중간에 객체 삽입 가능
+        Vector에서 객체 삭제
+            임의의 위치에 있는 객체 삭제 가능
+
+## 컬렉션과 자동 박싱/언박싱
+    JDK 1.5 이전
+        기본 타입 데이터를 Wrapper 객체로 만들어 삽입
+        컬렉션으로부터요소를 얻올 때, Wrapper 클래스로 캐스팅 필요
+    
+    JDK 1.5 부터
+    자동 박싱/언박싱이 작동하여 기본 타입 값 삽입 가능
+
+## 컬렉션 생성문의 진화 : Java 7, Java 10
+    Java 7 이전
+        Vector<Integer> v = new Vector<Integer>(); // Java 7 이전
+
+    Java 7 이후
+        컴파일러의 타입 추론 기능 추가
+        <>(다이어몬드 연사자)에 타입 매개변수 생략
+        Vector<Integer> v = new Vector<>(); // Java 7부터 추가, 가능
+        
+    Java 10 이후
+        var 키워드 도입, 컴파일러의 지역 변수 타입 추론 가능
+        var v = new Vector<Integer>(); // Java 10부터 추가, 가능
+
+``` java
+package chapter02;
+
+import java.util.Vector;
+
+public class VectorEx {
+    public static void main(String[] args) {
+        // 정수 값만 다루는 제네릭 벡터 생성
+        Vector<Integer> v = new Vector<Integer>();
+        v.add(5);   // 5 삽입
+        v.add(4);   // 4 삽입
+        v.add(-1);   // -1 삽입
+
+        // 벡터 중간에 삽입하기
+        v.add(2, 100); // 4와 -1 사이에 정수 100 삽입
+        System.out.println("베거 내의 요소 객체 수 : " + v.size());
+        System.out.println("벡터의 현재 용량 : " + v.capacity());
+
+        // 모든 요소 저수 출력하기
+        for (int i = 0; i < v.size(); i++) {
+            int n = v.get(i);   // 벡터의 1 번째 정수
+            System.out.println(n);            
+        }
+        // 벡터 속의 모든 정수 더하기
+        int sum = 0;
+        for(int i=0; i<v.size(); i++)   {
+            int n = v.elementAt(); // 벡터의 1 번째 정수
+            sum += n;
+        }
+        System.out.println("벡터에 있는 함수 합 : " + sum);
+    }    
+}
+
+```
+
+## ArrayList<E>
+    가변 크기 배열을 구현한 클래스
+        <E>에 요소로 사용할 특정 타입으로 구체화
+    벡터와 거의 동일
+        요소 삽입, 삭제, 검색 등 벡터 기능과 거의 동일
+        벡터와 달리 스레드 동기화 기능 없음
+            다수 스레드가 동시에 ArrayList에 접근할 때 동기화되지 않음. 개발자가 스레드 동기화 코드 작성
+
+## 컬렉션의 순차 검색을 위한 Iterator
+    Iterator<E> 인터페이스
+        리스트 구조의 컬렉션에서 요소의 순차 검색을 위한 인터페이스
+            Vector<E>, ArrayList<E>, LinkedList<E>가 상속받는 인터페이스
+
+    Iterator 객체 얻어내기
+        컬렉션의 Iterator()메소드 호출
+            해당 컬렉션을 순차 검색할 수 있는 Iterator 객체 리턴
+        컬렉션 검색 코드
+
+## HashMap <K, V>
+    키(Key)와 값(value)의 쌍으로 구성되는 요소를 다루는 컬렉션
+        K : 키로 사용할 요소의 타입
+        V : 값으로 사용할 요소의 타입
+        키와 값이 한 쌍으로 삽입
+        '값'을 검색하기 위해서는 반드시 '키' 이용
+    삽입 및 검색이 빠른 특징
+        요소 삽입 : put() 메소드
+        요소 검색 : get() 메소드
+
+```java
+package chapter02;
+import java.util.*;
+public class HavhMapDicEx {
+    public static void main(String[] args) {
+        // 영어 단어와 한글 단어의 쌍을 저장하는 HashMap
+        HashMap<String, String> dic = new HashMap<String, String>();
+
+        // 3 개의 (key, value) 쌍을 dic에 저장
+        dic.put("baby", "아기");
+        dic.put("love", "사랑");
+        dic.put("apple", "사과");
+
+        // dic 해시 맵에 들어 있는 모든 (key, value) 쌍 출력
+        Set<String> keys = dic.keySet(); // 모든 키를 Set 컬렉션에 받아옴
+        Iterator<String> it = keys.iterator(); // Set에 접근하는 Iterator 리턴
+        while(it.hasNexst()) {
+            String key = it.next(); // 키
+            String value = dic.get(key); // 값
+            System.out.print("(" + key + "," + value + ")");
+        }
+        System.out.println();
+
+        // 영어 단어를 입력받고 한글 단어 검색
+        Scanner scanner = new scanner(System.ln);
+        for(int i=0; i<3; i++) {
+            System.out.print("찾고 싶은 단어는?");
+            String eng = scanner.next();
+            // 해시맵에서 '키' eng의 '값' kor 검색
+            if(kor == null)
+                System.out.println(eng + "는 없는 단어 입니다.");
+            else
+                System.out.println(kor);
+        }
+    }
+}
+```
+
+## 제네릭 만들기
+    제네릭 클래스 작성
+        클래스 이름 옆에 일반화된 타입 매개 변수 추가
+        제네릭 객체 생성 미 활용
+            제네릭 타입에 구체적인 타입을 지정하여 객체를 생성하는 것을 구체화라고 함
+
+## 자바의 GUI(Sraphical User InterFace)
+    GUI 응용프로그램
+        GUI
+            사용자가 편리하게 입출력 할 수 잇도록 그래픽으로 화면을 구성하고, 마우스나 키보드로 입력 받을 수 있돌고 지원하는 사용자 인터페이스
+        자바 언어에서 GUI 응용프로그램 작성
+            AWT 와Swing 패키지에 강력한 GUI 컴포넌트 제공
+            쉬운 GUI 프로그래밍
+    
+    AWT와 Swing 패키지
+        AWT(Abstract windowing Toolkit) 패키지
+            자바가 음 나았을 때부터 배포된 GUI 패키지, 최근에는 거의 사용하지 않음
+            AWT 컴포넌트는 중량 컴포넌트(heavy weight component)
+                AWT 컴포넌트의 그리기는 운영체제에 의해 이루어지며, 운영체제에 의 자원을 많이 소모하고 부담을 줌
+                운영체제가 직접 그리기 때문에 속도는 빠름
+        
+        Swing패키지
+            AWT 기술을 기반으로 작성된 자바 라이브러리
+            모든 AWT 기능 + 추가된 풍부하고 화려한 고급 컴포넌트
+            AWT 컴포넌트를 모두 수윙으로 재작성, AWT 컴포넌트 이름 앞에 J자를 덧 붙임
+            순수 자바 언어로 구현
+            스윙 컴포넌트는 경량 컴포넌트
+                스윙 컴포넌트는 운영체제의 도움을 받지않고 직접 그리기 대문에 운영체제에 부담주지 않음
+            현재 바다의 GUI로 사용됨
+
+## 컨테이너와 컴포넌트
+    컨테이너
+        다른 컴포넌트를 포함할 수 있는 GUI 컴포넌트
+            java.awt.Container를 상속받음
+        다른 커네이너에 포함될 수 있음
+            AWT 컨테이너 : Panel, Frame, Applet, Dialog, Window
+            Swing 컨테이너 : JPanel, JFrame, JApplet, JWindow
+
+    컴포넌트
+        컨테이너에 포함되어야 화면에 출력될 수 있는 GUI 객체
+        다른 컴포넌트를 포함할 수 없는 순수 컴포넌트
+        모든 GUI 컴포넌트가 상속받는 클래스 : java.awt.Component
+        스윙 컴포넌트가 상속받는 클래스 : javax.swing.JComponent
+    
+    최상위 컨테이너
+        다른 컨테이너에 포함도지 않고도 화면에 출력되며 독립적으로 존재 가능한 컨테이너
+            스스로 화면에 자신을 출력하는 컨테이너 : JFrame, JDialog, JApplet
+
+
+## 스윙 GUI 프로그램 만들기
+    스윙 GUI 프로그램을 만드는 과정
+        1. 스윙 프레임 만들기
+        2. MAIN() 메소드 작성
+        3. 스윙 프레임에 스윙 컴포넌트 붙이기
+
+    스윙 플그램 작서에 필요한 import문
+        import java.awt.*;              // 그래픽 처리를 위한 크랠스들이 경로명
+        import java.awt.event.*;        // AWT 이벤트 사용을 위한 경로명
+        import java.swing.*;            // 스윙 컴포넌트 클래스들의 경로명
+        import java.swing.event.*;      // 스윙 이벤트를 위한 경로명
+
+## 스윙 프레임
+    스윙 프레임 : 모든 스윙 컴포넌트를 담는 최상위 컨테이너
+        JFrame을 상속받아 구현
+        컴포넌트들은 화면에 보이려면 스윙 프레임에 부착되어야 함
+            프레임을 닫ㅇ면 프레임에 부착된 모든 컴포넌트가 보이지 않게 됨
+    스윙 프레임 기본 구성
+        프레임 - 스윙 프로그램의 기본 틀
+        메뉴바 - 메뉴들이 부착되는 공간
+        컨펜트팬 - AUI 컴포넌트들이 부착되는 공간
+
+## 프레임 만들기, JFrame 클래스 상속
+    스윙 프레임
+        JFrame 클래스를 상속받은 클래스 작성
+        프레임의 크기 반드시 지정 : setSize() 호출
+        프레임을 화면에 출력하느 ㄴ코드 반드시 필요 : setVisible(true) 호출
+
+```java
+package chapter02;
+import javax.swing.*;
+public class MyFrame extends JFrame {
+    public MyFrame() {
+        setTitle("300x300 프레임");
+        setSize(300, 300);
+        setVisible(true);
+    }    
+    public static void main(String[] args) {
+        MyFrame frame = new MyFrame();
+    }
+}
+```
+
+## 스윙 응용프로그램에서 main()의 기능과 위치
+    스윙 응용프로그램이 실행되는 시작점으로서의 기능만
+    스윙 프레임을 생성하는 정도의 코드로 최소화
+
+## 프레임에 컴포넌트 붙이기
+    타이틀 달기
+        super()나 setTitle() 이용
+    
+    컨텐트팬에 컴포넌트 달기
+        컨텐트팬이란?
+            스윙 컴포넌트들이 부착되는 공간
+        
+        컨텐트팬 알아내기
+            스윙 프레임에 붙은 디폴트 컨텐트팬 알아내기
+
+        컨텐트팬에 컴포넌트 붙이기
+
+        컨텐트팬 변경
+
+```java
+package chapter02;
+import javax.swing.*;
+import java.awt.*;
+public class ContentPaneEx extends JFrame {
+    public ContentPaneEx() {
+        setTitle("ContentPane과 JKrame 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Container contentPane = getContentPane();
+        contentPane.setBackground(Color.ORANGE);
+        contentPane.setLayout(new FlowLayout());
+
+
+        contentPane.add(new JButton("OK"));
+        contentPane.add(new JButton("Cancel"));
+        contentPane.add(new JButton("Ignore"));
+
+        setSize(300 ,150);
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new ContentPaneEx();
+    }
+}
+```
+
+
+
 ## 4월 19일 강의
 ## 추상 클래스 상속
     추상 클래스를 상속받으면 추상 클래스가 됨
