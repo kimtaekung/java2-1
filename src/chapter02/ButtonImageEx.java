@@ -11,8 +11,8 @@ public class ButtonImageEx extends JFrame {
             c.setLayout(new FlowLayout());
 
             ImageIcon normalIcon = new ImageIcon("images/call.gif");
-            ImageIcon rolloverIcon = new ImageIcon("images/gosling.jpg");
-            ImageIcon pressedIcon = new ImageIcon("images/call.gif");
+            ImageIcon rolloverIcon = new ImageIcon("../images/gosling.jpg");
+            ImageIcon pressedIcon = new ImageIcon("./images/call.gif");
 
             JButton btn = new JButton("call~~", normalIcon);
             btn.setPressedIcon(pressedIcon);

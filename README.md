@@ -1,11 +1,475 @@
 ## 202330109 김태경
 
+## 6월 17일
+## 스윙 컴포넌트 그리기
+    스윙의 페인팅 기본
+        모든 컴포넌트는 자신의 모양을 스스로 그린다
+        컨테이너는 자신을 그린 후 그 위에 자식 컴포넌트들에게 그리기 지시
+        모든 스윙 컴포넌트는 자신의 모양ㅇ을 그리는 paintComponent() 메소드 보유
+    
+    public void paintComponent(Graphics g)
+        스윙 컴포넌트가 자신의 모을 그리는 메소드
+        JComponent의 메소드 : 모든 스윙 컴포넌트가 이 메소드를 오버라이딩함
+        언제 호출 되는가
+            컴포넌트가 그려져야 하는 시점마다 호출
+            크기가 변경, 위치 변경, 컴포넌트가 가려졌을 경우등
+        매개변수인 Graphics 객체
+            그래픽 컨텍스트 : 컴포넌트 그리기에 필요한 도구를 제공하는 객체
+            자바 플랫폼에 의해 공급
+            색 지정, 도형 그리기, 클리핑, 이미지 그리기 등이 메소드 제공
+    
+
+## paintComponent()의 오버라이딩과  JPnel
+    paintComponent(Graphic g)의 오버라이딩
+        개발자가 JComponent를 상속받아 새로운 컴포넌트 설계
+
+    JPanel
+        비어 있는 컨테이너
+        개발자가 다양한 GI를 창출할 수 있느 ㄴ캔버스로 적합
+        JPnel을 상속받아 개발자 임의의 모양을 가지는 패널로 많이 사용
+
+
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class paintJPanelEX extends JFrame {
+    public paintJPanelEX() {
+        setTitle("JPanel의  paintComponent() 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(new MyPanel());
+        setSize(250, 200);
+        setVisible(true);
+    }
+
+    class MyPanel extends JPanel {
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.BLUE);
+            g.drawRect(10, 10, 50, 50);
+            g.drawRect(50, 50, 50, 50);
+
+            g.setColor(Color.MAGENTA);
+            g.drawRect(90, 90, 50, 50);
+        }
+    }
+
+    public static void main(String[] args) {
+        new paintJPanelEX();
+    }
+    
+}
+```
+
+
+## 그래픽 기반 GUI 프로그래밍
+    그래픽 기반 GUI 프로그래밍
+        스윙 컴포넌트에 의존하지 않고 선, 원 이미지 등을 이용하여 직접 화면응ㄹ 구성하는 방법
+        그래픽 기반 GUI 프로그래밍의 학습이 필요한 이유
+            컴포넌트의 한계를 극복하고 차트,  게임 등 자유로운 콤텐트 표현
+            그래픽은 컴포넌트에 비해 화면 출력 속도가 빠름
+            스윙 컴포넌트들로 모두 그래픽으로 작성되어 있어, 그래픽에 대한 학습은 자바 GUI의 바탕 기술을 이해하는데 도움
+            그래픽을 이용하여 개발자 자신만의 컴포넌트 개발
+
+
+## Graphics와 문자열 출력
+    Graphics의 기능
+        색상 선택하기 
+        문자열 그리기
+        도형 그리기
+        도형 칠하기
+        이미지 그리기
+        클리핑
+
+## 그래픽의 색과 폰트
+    색 : color 클래스
+    폰트 : font 클래스
+    Grapchics에 색과 폰트 설정
+
+
+## 도형 그리기와 칠하기
+    도형 그리기
+        선, 타원, 사각형, 둥근 모서리 사각형, 원호, 페 다각형 그리기
+        선 굵기 조절 X
+
+    도형 칠하기
+        도형을 그리고 내부를 칠하는 기능
+            도형의 외락선과 내부를 따로 칠하는 기능 없음
+        도형 칠하기위한 메소드
+        그리기 메소드 명에서 draw 대신 fill로 이름 대치
+
+```java
+import javax.swing.*;
+import java.awt.*;
+
+public class paintJPanelEX extends JFrame {
+    public paintJPanelEX() {
+        setTitle("JPanel의  paintComponent() 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setContentPane(new MyPanel());
+        setSize(250, 200);
+        setVisible(true);
+    }
+
+    class MyPanel extends JPanel {
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.setColor(Color.BLUE);
+            g.drawRect(10, 10, 50, 50);
+            g.drawString("자바가 정말 재밋다.~~", 30, 30);
+            g.setColor(new Color(255, 0, 0));
+            g.setFont(new Font("Arial", Font.ITALIC, 30));
+            g.setColor(new Color(0x00ff00ff));
+            g.drawLine(20, 20, 100, 100);
+            g.drawOval(20, 300, 80, 80);
+            g.drawRoundRect(20, 20,120,80,40,60);
+            g.drawArc(20, 200,80,80,90,270);
+
+            int []x = {80,40,80,120,90};
+            int []y = {40,120,200,120,100};
+            g.fillPolygon(x, y, 5);
+        }
+    }
+
+    public static void main(String[] args) {
+        new paintJPanelEX();
+    }
+    
+}
+```
+
+## 스윙에서 이미지를 그리는 2가지 방법
+    JLabel을 이용한 이미지 그리기
+        장점 : 이미지 그리기 간편 용이
+        단점 : 이미지 원본 크기대로 그리므로 이미지 크기 조절 불가
+        
+    Graphics의 drawImage()로 이미지 출력
+        장점 : 이미지 일부분 등 이미지ㅡ의 원본 크기와 다르게 그리기 가능
+        단점 : 컴포넌트로 관리 할 수 없음 이미지의 위치나 크기 등을 적절히 조절하는 코딩 필요
+
+```java
+
+```
+## repaint()
+    repaint()
+        모든 컴포넌트가 가지고 있는 메소드
+        자바 플랫폼에게 컴포넌트 그리기를 강제 지시하는 메소드
+        repaint()를 호출하면, 자바 플랫폼이 컴포넌트의 paintComponent() 호출
+
+    repaint()의 호출이 필요한 경우
+        개발자가 컴포넌트를 다시 그리고자 하는 경우
+            프로그램에서 컴포넌트의 모양과 위치를 변경하고 바로 화면에 반영시키고자 하는 경우
+            컴포넌트가 다시 그려져야 그 때 변경된 위치에 변경된 모양으로 출력함
+            repaint()는 자바 플랫폼에게 지금 당장 컴포넌트를 다시 그리도록 지시함
+
+    부모 컴포넌트부터 다시 그리는 것이 좋음
+        컴포넌트 repaint()가 불려지면
+            이컴포넌트는 새로운 위치에 다시 그려지지만 이전의 위치에 있던 자신의 모양이 남아 있음
+        부모 컴포넌트의 repaint()를 호출하면
+            부모 컨테이너의 모든 내용을 지우고 자식을 다시 그리기 때문에 컴포넌트의 이전 모양이 지워지고 새로 변경된 크기나 위치에 그려짐
+
+## 멀티태스킹 개념
+    멀티태스킹
+        여려개의 작업(태스크)이 동시에 처리되는 것
+
+## 스레드와 운영체제
+    스레드
+        운영체제에 의해 관리되는 하나의 작업 혹은 태스크
+        스레드와 태스크(혹은 작업)은 바꾸어 사용해도 무관
+
+    멀티스레딩
+        여러 스레드를 동시에 실행시키는 응용프로그램을 작성ㅇ하는 기법
+
+    스레드 구성
+        스레드 코드
+            작업을 실행하기 위해 작성한 프로그램 코드
+            개발자가 작성
+        
+        스레드 정보
+            스레드 명, ID, 실행 소요 시간, 우선 순위 등
+            우영체제가 스레드에 대해 관리하는 정보
+
+
+## 멀티태스킹과 멀티스레딩
+    멀티태스킹 구현 기술
+        멀티프로세싱
+            하나의 응용프로그램이 여러 개의 프로세스를 생성하고, 각 프로세스가 하나의 작업을 처리하는 기법
+            각 프로세스 독립된 메모리 영역을 보유하고 실행
+            프로세스 사이의 문맥 교환에 따른 과도한 오버헤드와 시간 소모의 문제점
+
+        멀티스레딩
+            하나의 응용프로그램이 여러 개의 스레드를 생성하고, 각 스레드가 하나의 작업을 처리하는 기법
+            하나의 응용프로그램에 속한 스레드는 변수 메모리, 파일 오픈 테이블 등 자원을 공유하므로, 문맥 교환에 따른 오버헤드가 매주 작음
+            현재 대부분읜 운영체제가 멀티스레딩을 기본으로 하고 있음
+
+
+## 자바 스레드
+    자바 스레드
+        자바 가상 기계(jvm)에 의해 스케쥴되는 실행 단위의 코드 블럭
+        스레드의 생명주기는 jvm에 의해 관리됨 : jvm은 스레드 단위로 스케쥴링
+
+    jvm과 자바의 멀티스레딩
+        하나의 jvm은 하나의 자바 응용프로그램만 실행
+            자바 응프로그램이 시작될 때 jvm이 함께 실행됨
+            자바 응용프로그램이 종료하면 jvm도 함계 종료함
+        응용프로그램은 하나 이상의 스레드로 구성 가능
+
+
+## 자바 스레드 만드기
+    스레드 만드는 2가지 방법
+        java.lang.Thread 클래스를 상속받아 스레드 작성
+        java.lang.Runnable 인터페이스를 구현하여 스레드 작성
+
+
+## Thread 클래스를 상속받아 스레드 만들기
+    Thread를 상속받아 run() 오버라이딩
+        Thread 클래스 상속, 새 클래스 작성
+        run() 메소드 작성
+            run() 메소드르 ㄹ스레드 코드라고 부름
+            run() 메소드에서 스레드 실행 시작
+
+    스레드 객체 생성
+        새성된 객체는 필드와 메소드를 가진 객체일 뿐
+        스레드로 작동하지 않음
+
+    스레드 시작
+        start()메소드 호출
+            스레드로 작동 시작
+            스레드 객체의 run()이 비로소 실행
+            JVM에 의해 스케쥴되기 시작함
+
+
+```java
+import java.awt.*;
+import javax.swing.*;
+
+class TimerThread extends Thread{
+    private JLabel timerLabel;
+    public TimerThread(JLabel timerLabel) {
+        this.timerLabel = timerLabel;
+    }
+
+    // 스레드 코드 , run()이 종료하면 스레드 종료
+    @Override
+    public void run() {
+        int n=0; // 타이머 카운트 값
+        while(true) { // 무한 루트
+            timerLabel.setText(Integer.toString(n));
+            n++; // 카운트 증가
+            try {
+                Thread.sleep(1000); // 1초 동안 잠을 잔다
+            }
+            catch(InterruptedException e) {return;}
+        }
+    }
+}
+public class ThreadTimerEx extends JFrame {
+    public ThreadTimerEx() {
+        setTitle("Thread를 상속받은 타이머 스레드 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+        setSize(250, 150);
+        setVisible(true);
+
+        // 타이머 값을 출력할 레이블 생성
+        JLabel timerLabel = new JLabel();
+        timerLabel.setFont(new Font("Gothic", Font.ITALIC, 30));
+        c.add(timerLabel);
+
+        TimerThread th = new TimerThread(timerLabel);
+        th.start(); // 타이머 스레드의 실행을 시작하게 한다
+    }
+
+    public static void main(String[] args) {
+        new ThreadTimerEx();
+    }
+}
+```
+
+
+## Runnable 인테페이스로 스레드 만들기
+    Runnable 인터페이스 구현하는 새 클래스 작성
+        run() 메소드 구현
+            run() 메소드를 스레드 코드라고 부름
+            run() 메소드에서 스레드 실행 시작
+
+    스레드 객체 생성
+
+    스레드 시작
+        start() 메소드 호출
+            스레드로 작동 시작
+            스레드 객체의 run()이 비로소 실행
+            JVM에 의해 스케쥴되기 시작함
+
+```java
+import java.awt.*;
+import javax.swing.*;
+
+// class TimerThread extends Thread {
+class TimerThread implements Runnable {   
+    private JLabel timerLabel;
+    public TimerThread(JLabel timerLabel) {
+        this.timerLabel = timerLabel;
+    }
+
+    // 스레드 코드 , run()이 종료하면 스레드 종료
+    @Override
+    public void run() {
+        int n=0; // 타이머 카운트 값
+        while(true) { // 무한 루트
+            timerLabel.setText(Integer.toString(n));
+            n++; // 카운트 증가
+            try {
+                Thread.sleep(1000); // 1초 동안 잠을 잔다
+            }
+            catch(InterruptedException e) {return;}
+        }
+    }
+}
+public class ThreadTimerEx extends JFrame {
+    public ThreadTimerEx() {
+        setTitle("Thread를 상속받은 타이머 스레드 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+        setSize(250, 150);
+        setVisible(true);
+
+        // 타이머 값을 출력할 레이블 생성
+        JLabel timerLabel = new JLabel();
+        timerLabel.setFont(new Font("Gothic", Font.ITALIC, 30));
+        c.add(timerLabel);
+
+        // TimerThread th = new Thread(tirmerLabel);
+        TimerThread runnable = new TimerThread(timerLabel);
+        Thread th = new Thread(runnable);
+        th.start(); // 타이머 스레드의 실행을 시작하게 한다
+    }
+
+    public static void main(String[] args) {
+        new ThreadTimerEx();
+    }
+}
+```
+
+
+## main 스레드
+    mian 스레드
+        JVM이 응용프로그램을 실행할 때 디폴트로 생성되는 스레드
+            main() 메소드 실행 시작
+            main() 메소드가 종료하면 main 스레드 종료
+
+
+## 스레드 종료와 타 스레드 강제 종료
+    스스로 종료
+        run() 메소드 리턴
+
+    타 스레드에서 강제 종료
+        interrupt() 메소드 사용
+
+
+```java
+// import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.Random;
+
+
+public class VibratingFrame extends JFrame implements Runnable {
+    private Thread th;  // 진동하는 스레드
+    public VibratingFrame() {
+        setTitle("진동하는 프레임 만들기");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(200, 200);
+        setLocation(300, 300);
+        setVisible(true);
+
+        getContentPane().addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if(!th.isAlive()) return;
+                    th.interrupt();
+            }
+        });
+
+        th = new Thread(this);  // 진동하는 스레드 객체 생성
+        th. start();    // 진동 시작
+    }
+    @Override
+    public void run() { // 프레임의 진동을 일으키기 위해
+                    // 20ms마다 프레임의 위치를 랜덤하게 이동
+        Random r = new Random();
+        while (true) {
+            try {
+                Thread.sleep(20);   // 20ms 잠자기
+            }
+            catch(InterruptedException e){
+                return; // 리턴하면 스레드 종료
+            }
+            int x = getX() + r.nextInt()%5;
+            int y = getY() + r.nextInt()%5;
+            setLocation(x, y);
+        }
+    }
+    public static void main(String[] args) {
+        new VibratingFrame();
+    }    
+}
+```
+
+
+## 스레드 동기화
+    멀티스레드 프로그램 작성시 주의점
+        다수의 스레드가 공유 데이터에 동시에 접근하는 경우
+            공유 데이터의 값에 예상치 못한 결과 발생 가능
+
+    스레드 동기화
+        동기화란
+            스레드 사이의 실행순서 제어, 공유데이터에 대한 접근을 원할하게 하는 기법
+        멀티스레드의 공유 데이터의 동시 접근 문제 해결
+            방법1) 공유 데이터를 접근하는 모든 스레드이 한줄 세우기
+            방법2) 한 스레드가 공유 데이터에 대한 작업을 끝낼 때까지 다른 스레드가 대기 하도록 함
+    
+    자바의 스레드 동기화 방법 2가지
+        synchronized 키워드로 동기화 블록 지정
+        wait()-notify() 메소드로 스레드 실행 순서 제어
+
+
+## synchronized 블록 지정
+    synchronized 키워드
+        스레드가 독점적으로 실행해야 하는 부분(동기화 코드)을 표시하는 키워드
+            임제 영역 표기 키워드
+        synchronized 블록 지정 방법
+            메소드 전체 혹은 코드 블록
+    
+    synchronized 블록이 실행될 때
+        먼저 실행한 스레드가 모니터 소유
+            모니터란 해당 객체를 독점적으로 사용할 수 있는 권한
+        모니터를 소유한 스레드가 모니터를 내놓을 때까지 다른 스레드 대기
+
+
+## wait()-notify()를 이용한 스레드 동기화
+    wait()-notify()가 필요한 경우
+        공유 데이터로 두 개 이상의 스레드가 데이터를 주고 받을 때
+            producer-consumer문제
+
+    동기화 메소드 
+        wait() : 다른 스레드가 notify()를 불러줄 때까지 기다린다
+        notify() : wait()를 호출하여 대기중인 스레들ㄹ 꺠운다
+            wait(), notify()는 Object의 메소드
+
+
+## 
+
+
+
 ## 5월 31일
 ## 자바의 GUI 프로그래밍 방법
     자바의 GUI 프로그래밍 방법 2종류
         컴포넌트 기반 GUI 프로그래밍
             스윙 컴포넌트를 이용하여 쉽게 GUI를 구축
             자바에서 제공하는 컴포넌트의 한계를 벗어나지 못함
+
         그래픽 기반 GUI 프로그래밍
             그래픽을 이용하여 GUI 구축
             개발자가 직접 그래픽으로 화면을 구성하는 부단
@@ -120,7 +584,181 @@ public class ButtonImageEx extends JFrame {
 }
 ```
 
-## 
+## JCheckBox로 체크박스 만들기
+    JCeckBox의 용도
+        선택과 비선택 두 상태만 가지는 버튼
+
+```java
+package chapter02;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class CheckBoxEx extends JFrame{
+    public CheckBoxEx() {
+        setTitle("체크박스 만들기 예제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+
+        ImageIcon gosling = new ImageIcon("image/gosling.jpg");
+
+        // 3개의 체크박스 생성
+        JCheckBox apple = new JCheckBox("사과");
+        JCheckBox pear = new JCheckBox("배", true);
+        JCheckBox cherry = new JCheckBox(gosling);
+        JCheckBox foo = new JCheckBox("고슬링", gosling, true);
+
+        c.add(apple);
+        c.add(pear);
+        c.add(cherry);
+        c.add(foo);
+
+        setSize(250, 150);
+        setVisible(true);
+    }
+    public static void main(String[] args) {
+        new CheckBoxEx();
+    }
+}
+```
+
+## 체크박스에 Item 이벤트 처리
+    Item 이벤트
+        체크 박스의 선택 상태에 변화가 생길 때 발생하는 이벤트
+            사용자가 마우스나 키보드로 체크박스 선택/해체할 때
+            프로그램에서 체크박스를 선택/해체하여 체크 상태에 변화가 생길 때
+        이벤트가 발생하면 ItemEvent 객체 생성
+        ItemListener 리스너를 이용하여 이벤트 처리
+    ItemListener 리스너의 추상 메소드
+        void itemStateChanged(ItemEvnet e)
+
+    ItemEvent의 주요 메소드
+        int getStateChange()
+        Object getItem()
+
+## RadioButton으로 라디오버튼 만들기
+    JRadioButton의 용도
+        버튼 그룹을 형성하고, 그룹에 속한 버튼 중 하나만 선택되는 라디오버튼
+        체크박스와의 차이점
+            체크 박스는 각가 선택/해체가 가능하지만, 라디오버튼은 그룹에 속한 버튼 중 하나만 선택
+
+## 라디오 버튼 생성 및 Item 이벤트 처리
+    버튼 그룹과 라디오 버튼 생성 과정
+        1. 버튼 그룹 객체 생성
+        2.라디오버튼 생성
+        3. 라디오버튼을 버튼 그룹에 삽입
+        4. 라딩버튼을 컨테이너에 삽입
+    라디오 버튼에 Item 이벤트 처리 : ItemListener 리스너 이용
+        라디오버튼이 선택/해체되어 상태가 달라지면, Item 이벤트 발생
+            사용자가 마우스나 키보드로 선택 상태를 변경 할 때
+            프로그램에서 JRadioButton의 setSelected()를 호출하여 선택 상태를 변경할 때
+
+```java
+package chapter02;
+import javax.swing.*;
+import java.awt.*;
+
+public class RadioButtonEx extends JFrame {
+    public RadioButtonEx() {
+        setTitle("라디오버튼 만들기 에제");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        containers c = getContentPane();
+        c.setLayout(new FlowLayout());
+        ButtonGroup g = new ButtonGroup();
+
+        imageIcon img = new ImageIcon("images/gesling.jpg");
+
+        JRadioButton apple = new JRadioButton("사과");
+        JRadioButton pear = new JRadioButton("배", true);
+        JRadioButton cherry = new JRadioButton(img);
+
+        g.add(apple);
+        g.add(pear);
+        g.add(cherry);
+
+        c.add(apple); c.add(pear); c.add(cherry);
+        setSize(2250, 150);
+        setVisible(true);
+    }
+    public static void main(String[] args) {
+        new RadioButtonEx();
+    }
+    
+}
+```
+
+## JTextField로 한 줄 입력 창 만들기
+    JTextField
+        한 줄의 문자열을 입력 받는 창(텍스트필드)
+            텍스트 입력 도중 엔터키가 입력되면 Action 이벤트 발생
+            입력 가능한 문자 개수와 입력 창의 크기는 서로 다름
+
+
+```java
+TextFieldEx.java
+```
+
+```java
+TextAreaEx.java
+```
+
+## JList<E>
+    JList<E>
+        하나 이상의 아이템을 보여주고 아이템을 선택하도록 하는 리스트
+        Java 7부터 제네릭 리스트로 바뀜
+            <E>에 지정된 타입의 객체만 저장하는 리스트
+        JScrollPane에 JList<E>를 삽입하여 스크롤 가능
+    
+```java
+listEx.java
+```
+
+## JCombobox<E>
+    JCombobox<E>
+        텍스트필드와 버튼, 그리고 드롭다운 리스트로 구성되는 콤보박스
+        드롭다운 리스트에서 선택한 것이 텍스트필드에 나타남
+
+```java
+ComboActionEx.java
+```
+
+## 메뉴 구성
+    메뉴 만들기에 피룡한 스윙 컴포넌트
+        메뉴아이템 - JMenuItem
+        메뉴 - JMenu
+            여러 개의 메뉴 아이템을 가짐
+        메뉴바 - JMenuBar
+            여러 개의 메뉴를 붙이는 바이며, 프레임에 부착됨
+        분리선
+            메뉴아이템 사이의 분리선으로 separator라고 부름
+            JMenu의 addSeparator()를 호출하여 삽입함
+
+```java
+MenuEx.java
+```
+
+## 메뉴아이템에 Action 이벤트 달기
+    메뉴아이템을 클릭하면 Action 발생
+        메뉴아이템은 사용자로부터 지시나 명령을 받는데 사용
+        ActionListener 인터페이스로 리스너 작성
+        각 메뉴아이템마다 이베느 리스너 설정
+
+```java
+MenuActionEventEx.java
+```
+
+## 팝업 다이얼로그, JOptuonPane
+    팝업 다이얼로그
+        사용자에게 메세지를 전달하거나 문자열을 간단히 입력받느 ㄴ용도
+        JOptionPane 클래스를 이용하여 생성
+            static 타입의 간단한 메소드 이용
+    
+    입력 다이얼로그 - JOptionPane.showInputDialog()
+        한 줄을 입력 받는 다이얼로그
+
+## 확인 다이얼로그
+    확인 다이얼로그 -JoptionPane.ShowConfirmDialog()
 
 
 
