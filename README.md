@@ -1,11 +1,323 @@
 ## 202330109 김태경
 
-## 6월 17일
+## 6월 14일
+## 자바의 입출력 스트림
+    자바의 입출력 스트림
+        입출력 장치와 자바 응용 프로그램 연결
+            입력 스트림 : 입력 장치로부터 자바 프로그램으로 데이터를 전달하는 객체
+            출력 스트림 : 자바 프로그램에서 출력 장치로 데이터를 보내는 객체
+        특징
+            입출력 스트림 기본 단위 : 바이트
+            단방향 스트림, 선입선출 구조
+
+
+## 사바의 입출력 스트림 종류
+    문자 스트림
+        문자만 입출력하는 스트림
+        문자가 아닌 바이너리 데이터는 스트림에서 처리 못 함
+        문자가 아닌 데이터를 스트리믕로 출력하면 기호가 깨짐
+        바이너리 파일 문자 스트리믕로 일으면 읽을 수 없는 바이트 생성
+    
+    바이트 스트림
+        입출력 데이터를 단순 바이트의 흐름으로 처리
+        문자 데이터 든 바이너리 데이터든 상관없이 처리 가능
+
+
+## 스트림 연결
+    여러 개의 스트림을 연결하여 사용할 수 있음
+
+
+## 문자 스트림으로 텍스트 파일 읽기
+    텍스트 파일을 읽기 위해 문자 스트림 FileReader 클래스 이용
+        1. 파일 일력 스트림 생성(파일 열기)
+            스트림을 생성하고 파잉응ㄹ 열어 스트림과 연결
+
+        2. 파일 읽기
+            read()로 문자 하나 씩 파일에서 읽음
+
+        3. 스트림 닫기
+            스트림이 더 이상 필요 없으면 닫아야 함. 닫힌 스트림에서는 읽을 수 없음
+            close()로 스트림 닫기
+
+
+## 파일 입출력과 예외 처리
+    파일 입출력 동안 예외 발생 가능
+        스트림 생성 동안 : FileNotFoundException 발생 가능
+            파일의 경로명이 틀리거나, 디스크고장 등으로 파일을 열 수 없음
+        
+        파일 읽, 쓰기, 닫기를 하는 동안 : IOException 발생 가능
+            디스크 오동작, 파일이 중간에 깨진 경우, 디스크 공간이 모자라서 파일 입출력 불가
+
+    try-catch 블록 반드시 필요
+        자바 컴파일러의 강제 사항
+
+
+```java
+import java.io.*;
+
+public class FileReaderEx {
+    public static void main(String[] args) {
+        FileReader in = null;
+        try {
+            in = new FileReader("c:\\windows\\system.ini");
+            int c;
+            while ((c = in.read()) != -1) {
+                System.out.print((char)c);
+            }
+            in.close();
+        }
+        catch (IOException e) {
+            System.out.println("입출력 오류");
+        }
+    }
+}
+```
+
+
+## 문자 스트림으로 텍스트 파일 쓰기
+    텍스트 파일에 쓰기 위해 문자 스트림 FileWriter 클래스 이용
+        1. 파일 출력 스트림 생성(파일 열기)
+            스트림을 생성하고 파일을 열어 스트림과 연결
+
+        2. 파일 쓰기
+            write()로 문자 하나 씩 파일에 기록
+
+            블록 단위로 쓰기 가능
+
+        3. 스트림 닫기
+            close()로 스트림 닫기
+
+
+```java
+import java.io.*;
+
+public class FileReaderEx {
+    public static void main(String[] args) {
+        InputStreamReader in = new InputStreamReader(System.in);
+
+        FileWriter fout = null;
+        int c;
+        try {
+            fout = new FileWriter("c:\\temp\\test.txt");
+            while ((c = in.read()) != -1) {
+                fout.write(c);
+            }
+            in.close();
+            fout.close();
+        }
+        catch (IOException e) {
+            System.out.println("입출력 오류");
+        }
+    }
+}
+```
+
+
+## 바이트 스트림으로 바이너리 파일 쓰기
+    바이너리 값을 파일에 저장하기
+        프로그램 내의 변수, 배열, 버퍼에 든 바이너리 값을 파일에 그대로 기록
+            FileOutputStream 클래스 이용
+        
+        1. 파일 출력 스트림 생성(파일 열기)
+            스트림을 생성하고 파일을 열어 스트림과 연결
+        
+        2. 파일 쓰기
+            write()로 문자 하나 씩 파일에 기록
+        
+        3. 스트림 닫기
+            close()로 스트림 닫기
+
+
+```java
+import java.io.*;
+public class FileinputStreamEx {
+    public static void main(String[] args) {
+        byte b [] = new byte [6];
+        try {
+            FileInputStream fin =
+                new FileInputStream("c:\\Temp\\test.out");
+            int n=0, c;
+            while((c = fin.read())!= -1) {
+                b[n] = (byte)c;
+                n++;
+            }
+
+            System.out.println(
+                "c:\\Temp\\test.out에서 일은 배열을 출력합니다.");
+            for(int i=0; i<b.length; i++)
+                System.out.print(b[i]+" ");
+            System.out.println();
+
+            fin.close();
+        } catch(IOException e) { }
+    }
+}
+```
+
+
+## TCP/IP 소개
+    TCP/IP 프로토콜
+        두 시스템 간에 데이터가 손상없이 안전하게 전송되도록 하는 통신 프로토콜
+        TCP에서 동작하는 응용프로그램 사례
+            e-mail, FIP, 웹(HTTP) 등
+
+    TCP/IP특징
+        연결형 통신
+            한 번 연결 후 계속 데이터 전송 가능
+        보낸 순서대로 받아 응용프로그램에게 전달
+
+
+## IP 주소
+    IP 주소
+        네트워크 상에서 유일하게 식별될 수 있는 컴퓨터 주소
+            숫자로 구성된 주소
+            4개의 숫자가 '.'으로 연결
+                ex) 192.156.11.15
+
+    숫자로 된 주소는 기억하기 어려우므로 www.naver.com과 같은 문자열로 구성된 도메인 이름으로 바꿔ㅓ 사용
+        DNS(Domain Name System)
+            문자열로 구성된 도메인 이름을 숫자로 구성된 IP 주소로 자동 변환
+
+    현재는  32비트의 IP 버ㅓㄴ 4(IPv4)가 사용되고 있음
+        IP 주소 고갈로 인해 128비트 IP 버전 6(IPv6)이 점점 사용되는 추세
+    
+    자신의 IP 주소를 간단히 locallhost라는 이름으로 사용 가능
+
+
+## 포트 
+    포트
+        통신하는 프로그램 간에 가상의 연결단 포트 생성
+            IP 주소는 네트워크 상의 컴퓨터 또는 시스템을 식별하는 주소
+            포트 번호를 이용하여 통신할 응용프로그램 실벽
+
+        모든 응용프로그램은 하나 이상의 포트 생성 가능
+            포트를 이용하여 상대방 응용프로그램과 데이터 교환
+
+        잘 알려진 포트(well-known ports)
+            시스템이 사용하는 포트 번호
+            잘 알려진 응용프로그램에서 사용하는 포트 번호
+            0부터 1023 사이의 포트 번호
+            ex) SSH 22, HTTP 80, FTP 21
+
+        잘 알려진 포트 번호는 개발자가 사용하지 않는 것이 좋음
+            충돌 가능성이 있음
+
+
+## 소켓 프로그래밍
+    소켓 (socket)
+        TCP/IP 네트워크를 이용하여 쉽게 통신 프로그램을 작성하도록 지원하는 기반 기술
+    소켓
+        두 응용프로그램 간의 양방향 통신 링크의 한쪽 끝 단
+        소켓끼리 데이터를 주고받음
+        소켓은 특정 IP 포트 번호와 결합
+    자바로 소켓 통신할 수 있느 ㄴ라이브러리 지원
+    소켓 종류 : 서버 소켓과 클라이언트 소켓
+
+
+## Socket 클래스, 클ㄹ이언트 소켓
+    Socket 클래스
+        클라이언트 소켓에 사요되는 클래스
+        java.net 패키지에 포함
+        생성자
+        
+
+## 클라이언트에서 소켓으로 서버에 접속하는 코드
+    클라이언트 소켓 생성 및 서버에 접속
+        socket의 생성자에서  128.12.1.1의 주소의 9999포트에 접속
+    
+    소켓으로부터 데이터를 전송할 입출력 스트림 생성
+
+    서버로 데이터 전송
+        flush()를 호출하면 스트림 속에 데이터 모두 전송
+
+    서버로부터 데이터 수신
+
+    네트워크 접속 종료
+
+## 서버에 클라이언트가 연결되는 과정
+    서버는 서버 소켓으로 들어오는 연결 요청을 기다림(listen)
+
+    클라이언트가 서버에게 연결 요청
+
+    서버가 연결 요청 수락(accept)
+        새로운 클라이언트 소켓을 만들어 클라이언트오 통신하게 함
+        그리고 다시 다른 클라이언트의 연결을 기다림
+
+
+## 서버가 클라이언트와 통신하는 과정
+    서버 소켓 생성
+        서버는 9999 포트에서 접속 기다리는 포트로 9999 선택
+    
+    클라이언트로부터 접속 기달림
+        accept() 메소드는 접속 요청이 오면 접속 후 새 Socket 객체 반환
+        접속 후 새로 만들어진  Socket 객체를 통해 클라이언트와 통신
+    
+    네으퉈크 입출력 스트림 생성
+        Socket 객체의  getInputStream()과 getOutputStream() 메소드를 이용하여 입출력 데이터 스트림 생성
+
+    
+## 서버-클라이언트 채팅 프로그램 만들기
+    간단한 채팅 프로그램
+        서버와 클라이언트가  1:1로 채팅
+
+        클라이언트와 서버가 서로 한번씩 번갈아 가면서 문자열 전송
+            문자열 끝에 "\n"을 덧붙여 보내고 라인 단위로 수신
+
+        클라이언트가 bye를 보내면 프로그램 종료
+
+
+```java
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+public class ServerEx {
+    public static void main(String[] args) {
+        BufferedReader in = null;
+        BufferedWriter out = null;
+        ServerSocket listener = null;
+        Socket socket = null;
+        Scanner scanner = new Scanner(System.in);
+        try {
+            listener = new ServerSocket(9999);
+            System.out.println("연결을 기다리고있습니다....");
+            socket = listener.accept();
+            System.out.println("연결되었습니다.");
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            while (true) {
+                String inputMessage = in.readLine();
+                if (inputMessage.equalsIgnoreCase("bye")) {
+                    System.out.println("클라이언트에서 bye로 연결을 종료하였음");
+                    break;
+                }
+                System.out.println("클라이언트: " + inputMessage);
+                System.out.print("보내기>>");
+                String outputMessage = scanner.nextLine();
+                out.write(outputMessage + "\n");
+                out.flush();
+            }
+        } catch (IOException e) { System.out.println(e.getMessage());
+        } finally {
+            try {
+                scanner.close();
+                socket.close();
+                listener.close();
+            } catch (IOException e) { System.out.println("클라이언트와 채팅 중 오류가 발생했습니다."); }
+        }
+    }    
+}
+```
+
+
+
+
+## 6월 7일
 ## 스윙 컴포넌트 그리기
     스윙의 페인팅 기본
         모든 컴포넌트는 자신의 모양을 스스로 그린다
         컨테이너는 자신을 그린 후 그 위에 자식 컴포넌트들에게 그리기 지시
-        모든 스윙 컴포넌트는 자신의 모양ㅇ을 그리는 paintComponent() 메소드 보유
+        모든 스윙 컴포넌트는 자신의 모양을 그리는 paintComponent() 메소드 보유
     
     public void paintComponent(Graphics g)
         스윙 컴포넌트가 자신의 모을 그리는 메소드
